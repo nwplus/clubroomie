@@ -34,6 +34,10 @@ app.post("/checkout", async (req, res) => {
     res.status(400).send("Please provide an ID.");
     return;
   }
+  if ((await getOccupants()).length == 0) {
+    res.send(200);
+    return;
+  }
 
   removeOccupant(person.id);
   const newOccupants = await getOccupants();
