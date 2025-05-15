@@ -1,2 +1,4 @@
 .env
 /node_modules
+serviceAccount.json
+serviceAccount_archive.json
