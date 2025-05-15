@@ -4,6 +4,7 @@ import { addOccupant, getOccupants, removeOccupant } from "./firebase";
 import { initializeSweeper } from "./cron";
 import { announceChange } from "./slack";
 import { Occupant } from "./types";
+import { enterClubroom, extendStay, leaveClubroom } from "./occupants";
 
 initializeSweeper();
 
@@ -15,34 +16,33 @@ if (!process?.env?.PORT) throw new Error("PORT variable missing!");
 
 app.post("/checkin", async (req, res) => {
   const person = req.body as Occupant;
-  console.log("Checking in", person.id);
+  console.log(`Checking in ${person.id} until ${person.expiration}`);
   if (!person.id) {
     res.status(400).send("Please provide an ID.");
     return;
   }
 
-  addOccupant(person.id, person.expiration);
-  const newOccupants = await getOccupants();
-  announceChange("checkin", person, newOccupants);
-  res.send(newOccupants);
+  const currentOccupants = await getOccupants();
+  const currentOccupantIds = currentOccupants.map((p) => p.id);
+  if (currentOccupantIds.includes(person.id)) {
+    extendStay(person);
+  } else {
+    enterClubroom(person);
+  }
+
+  res.send(currentOccupants.concat(person));
 });
 
 app.post("/checkout", async (req, res) => {
   const person = req.body;
-  console.log("Checking out", person.id);
+  console.log(`Checking out ${person.id}`);
   if (!person.id) {
     res.status(400).send("Please provide an ID.");
     return;
   }
-  if ((await getOccupants()).length == 0) {
-    res.send(200);
-    return;
-  }
 
-  removeOccupant(person.id);
-  const newOccupants = await getOccupants();
-  announceChange("checkout", person, newOccupants);
-  res.send(newOccupants);
+  leaveClubroom(person);
+  res.send(await getOccupants());
 });
 
 app.get("/occupants", async (req, res) => {

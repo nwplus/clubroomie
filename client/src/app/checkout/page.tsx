@@ -1,28 +1,36 @@
 "use client";
 
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { TbLogout } from "react-icons/tb";
+import RequireAuth from "../components/RequireAuth";
+import { useAuth } from "../context/AuthContext";
 
-export default function CheckIn() {
-  const name = "Lincoln"; // TODO: Get dynamically from SSO
-
-  function checkOut() {
-    const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout`;
-    axios.post(url, {
-      id: name,
-    });
-  }
+export default function CheckOut() {
+  const { user } = useAuth();
+  const hasCheckedOut = useRef(false);
 
   useEffect(() => {
-    checkOut();
-  }, []);
+    if (user && !hasCheckedOut.current) {
+      hasCheckedOut.current = true;
+      const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout`;
+      axios.post(url, { id: user.displayName });
+    }
+  }, [user]);
 
   return (
-    <div className="w-full h-full flex flex-col gap-4">
-      <TbLogout className="w-36 h-36 fill-red-200" />
-      <h1>See you later {name}!</h1>
-      <p>Youve been removed from the roster.</p>
-    </div>
+    <RequireAuth>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 text-black">
+        <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center gap-6 w-full max-w-md text-center">
+          <TbLogout className="w-24 h-24 text-red-500" />
+          <h1 className="text-2xl font-semibold">
+            {user ? `See you later, ${user.displayName}!` : "Loading..."}
+          </h1>
+          <p className="text-gray-600">
+            You’ve been removed from the roster. Come back soon!
+          </p>
+        </div>
+      </div>
+    </RequireAuth>
   );
 }

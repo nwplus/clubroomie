@@ -1,28 +1,57 @@
 "use client";
 
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { TbLogin } from "react-icons/tb";
+import RequireAuth from "../components/RequireAuth";
+import { useAuth } from "../context/AuthContext";
+import { useSearchParams } from "next/navigation";
+
+const DEFAULT_DURATION_MIN = 30;
+const MS_IN_SEC = 1000;
+const MS_IN_MIN = 60 * MS_IN_SEC;
 
 export default function CheckIn() {
-  const name = "Lincoln"; // TODO: Get dynamically from SSO
-
-  function checkIn() {
-    const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkin`;
-    axios.post(url, {
-      id: name,
-    });
-  }
+  const { user } = useAuth();
+  const hasCheckedIn = useRef(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    checkIn();
-  }, []);
+    if (user && !hasCheckedIn.current) {
+      hasCheckedIn.current = true;
+
+      const durationParam = searchParams.get("duration");
+      console.log(durationParam);
+      const durationMinutes = durationParam
+        ? parseInt(durationParam)
+        : DEFAULT_DURATION_MIN;
+
+      const expirationDate = new Date(Date.now() + durationMinutes * MS_IN_MIN);
+      const expirationISO = expirationDate.toISOString();
+
+      const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkin`;
+      axios.post(url, {
+        id: user.displayName,
+        expiration: expirationISO,
+      });
+    }
+  }, [user, searchParams]);
 
   return (
-    <div className="w-full h-full flex flex-col gap-4">
-      <TbLogin className="w-36 h-36 green-500" />
-      <h1>Welcome to the clubroom {name}!</h1>
-      <p>Weve let everyone know youre here.</p>
-    </div>
+    <RequireAuth>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 text-black">
+        <div className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-center gap-6 w-full max-w-md text-center">
+          <TbLogin className="w-24 h-24 text-green-600" />
+          <h1 className="text-2xl font-semibold">
+            {user
+              ? `Welcome to the clubroom, ${user.displayName}!`
+              : "Loading..."}
+          </h1>
+          <p className="text-gray-600">
+            We’ve let everyone know you’re here. Enjoy your time!
+          </p>
+        </div>
+      </div>
+    </RequireAuth>
   );
 }

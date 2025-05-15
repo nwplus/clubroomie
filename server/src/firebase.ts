@@ -2,7 +2,7 @@ import { initializeApp, cert, ServiceAccount } from "firebase-admin/app";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import serviceAccount from "../serviceAccount.json";
 import { Occupant } from "./types";
-import { DEFAULT_STAY_DUATION_MINS } from "./constants";
+import { leaveClubroom } from "./occupants";
 
 initializeApp({
   credential: cert(serviceAccount as ServiceAccount),
@@ -15,7 +15,11 @@ export async function addOccupant(
   name: string,
   expiration?: string
 ): Promise<Occupant[]> {
-  const exitTime = new Date(Date.now() + DEFAULT_STAY_DUATION_MINS * 60 * 1000);
+  if (!process.env.DEFAULT_STAY_DURATION_MIN)
+    throw new Error("DEFAULT_STAY_DURATION_MIN env missing!");
+  const exitTime = new Date(
+    Date.now() + parseInt(process.env.DEFAULT_STAY_DURATION_MIN) * 60 * 1000
+  );
   await occupantsDocRef.set(
     {
       Occupants: {
@@ -33,11 +37,11 @@ export async function checkExpirations(): Promise<string[]> {
   const occupants = await getOccupants();
   const currentTime = new Date().toISOString();
   const removed = [];
-  for (const { id, expiration } of occupants) {
-    if (expiration && currentTime < expiration) continue;
-    if (id) {
-      removed.push(id);
-      removeOccupant(id);
+  for (const person of occupants) {
+    if (person.expiration && currentTime < person.expiration) continue;
+    if (person.id) {
+      removed.push(person.id);
+      leaveClubroom(person);
     }
   }
   return removed;
