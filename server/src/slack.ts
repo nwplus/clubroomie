@@ -21,19 +21,19 @@ function formatExpiration(iso: string) {
   return new Intl.DateTimeFormat("en-US", options).format(date).toLowerCase(); // e.g., "4:20 PM"
 }
 
-export type Action = "checkin" | "checkout" | "extend";
+export type Action = "checkin" | "checkout" | "change";
 
 export async function announceChange(action: Action, person: Occupant) {
   const messages: Record<Action, string> = {
     checkin: "entered the clubroom!",
     checkout: "left the clubroom!",
-    extend: `extended their stay!`,
+    change: `changed their stay time!`,
   };
 
   const emojis: Record<Action, string> = {
     checkin: "🥳",
     checkout: "👋",
-    extend: "⏰",
+    change: "⏰",
   };
 
   const occupants = await getOccupants();

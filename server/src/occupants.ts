@@ -15,8 +15,8 @@ export async function enterClubroom(person: Occupant) {
   await announceChange("checkin", person);
 }
 
-export async function extendStay(person: Occupant) {
+export async function changeStay(person: Occupant) {
   if (!person.id) throw new Error("ID is missing!");
   await addOccupant(person.id, person.expiration);
-  await announceChange("extend", person);
+  await announceChange("change", person);
 }

@@ -1,10 +1,9 @@
 import express from "express";
 import cors from "cors";
-import { addOccupant, getOccupants, removeOccupant } from "./firebase";
+import { getOccupants } from "./firebase";
 import { initializeSweeper } from "./cron";
-import { announceChange } from "./slack";
 import { Occupant } from "./types";
-import { enterClubroom, extendStay, leaveClubroom } from "./occupants";
+import { enterClubroom, changeStay, leaveClubroom } from "./occupants";
 
 initializeSweeper();
 
@@ -25,7 +24,7 @@ app.post("/checkin", async (req, res) => {
   const currentOccupants = await getOccupants();
   const currentOccupantIds = currentOccupants.map((p) => p.id);
   if (currentOccupantIds.includes(person.id)) {
-    extendStay(person);
+    changeStay(person);
   } else {
     enterClubroom(person);
   }
