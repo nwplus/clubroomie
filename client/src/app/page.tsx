@@ -25,7 +25,7 @@ export default function HomePage() {
     });
 
     return () => unsubscribe();
-  }, [redirectPath]);
+  }, [redirectPath, router]);
 
   if (!userChecked) return null;
 
