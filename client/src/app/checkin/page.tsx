@@ -7,7 +7,6 @@ import RequireAuth from "../components/RequireAuth";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "next/navigation";
 
-const DEFAULT_DURATION_MIN = 30;
 const MS_IN_SEC = 1000;
 const MS_IN_MIN = 60 * MS_IN_SEC;
 
@@ -22,17 +21,15 @@ export default function CheckIn() {
 
       const durationParam = searchParams.get("duration");
       console.log(durationParam);
-      const durationMinutes = durationParam
-        ? parseInt(durationParam)
-        : DEFAULT_DURATION_MIN;
-
-      const expirationDate = new Date(Date.now() + durationMinutes * MS_IN_MIN);
-      const expirationISO = expirationDate.toISOString();
+      const durationMinutes = durationParam ? parseInt(durationParam) : null;
+      const expirationISO =
+        durationMinutes &&
+        new Date(Date.now() + durationMinutes * MS_IN_MIN).toISOString();
 
       const url = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkin`;
       axios.post(url, {
         id: user.displayName,
-        expiration: expirationISO,
+        expiration: expirationISO ?? null,
       });
     }
   }, [user, searchParams]);
