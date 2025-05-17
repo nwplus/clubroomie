@@ -1,20 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "@/app/lib/firebase";
 import SignInButton from "@/app/components/SignInButton";
 import { User } from "firebase/auth";
 
-export default function SuspensefulHomePage() {
-  return (
-    <Suspense>
-      <HomePage />
-    </Suspense>
-  );
-}
-
-function HomePage() {
+export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [userChecked, setUserChecked] = useState(false);
 
