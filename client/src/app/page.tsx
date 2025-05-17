@@ -1,23 +1,54 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/context/AuthContext";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { auth } from "@/app/lib/firebase";
+import SignInButton from "@/app/components/SignInButton";
+import { User } from "firebase/auth";
 
-export default function HomePage() {
-  const { user } = useAuth();
+export default function SuspensefulHomePage() {
+  return (
+    <Suspense>
+      <HomePage />
+    </Suspense>
+  );
+}
+
+function HomePage() {
+  const [user, setUser] = useState<User | null>(null);
+  const [userChecked, setUserChecked] = useState(false);
+
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") || "/";
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setUserChecked(true);
+
+      if (currentUser && redirectPath !== "/") {
+        router.replace(redirectPath);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [redirectPath]);
+
+  if (!userChecked) return null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-6">
       <h1 className="text-3xl font-bold">Welcome to the nwClubroom 👋</h1>
 
       {!user ? (
-        <button
-          onClick={() => router.push("/signin")}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Sign In
-        </button>
+        <>
+          <p className="text-center text-gray-600">
+            Please sign in with your <strong>@nwplus.io</strong> Google account
+            to continue.
+          </p>
+          <SignInButton redirectPath={redirectPath} />
+        </>
       ) : (
         <div className="flex gap-4">
           <button

@@ -28,7 +28,6 @@ function CheckIn() {
       hasCheckedIn.current = true;
 
       const durationParam = searchParams.get("duration");
-      console.log(durationParam);
       const durationMinutes = durationParam ? parseInt(durationParam) : null;
       const expirationISO =
         durationMinutes &&

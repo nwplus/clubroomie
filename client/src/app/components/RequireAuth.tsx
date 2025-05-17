@@ -17,7 +17,7 @@ export default function RequireAuth({
   useEffect(() => {
     if (user === null) {
       const encoded = encodeURIComponent(pathname);
-      router.replace(`/signin?redirect=${encoded}`);
+      router.replace(`/?redirect=${encoded}`);
     } else if (user) {
       setCheckedAuth(true);
     }

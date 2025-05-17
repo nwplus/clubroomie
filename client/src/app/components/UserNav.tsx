@@ -10,7 +10,7 @@ export default function UserNav() {
 
   const signOut = async () => {
     await auth.signOut();
-    router.replace("/signin");
+    router.replace("/");
   };
 
   if (!user) return null;
