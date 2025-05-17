@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { TbLogin } from "react-icons/tb";
 import RequireAuth from "../components/RequireAuth";
 import { useAuth } from "../context/AuthContext";
@@ -10,7 +10,15 @@ import { useSearchParams } from "next/navigation";
 const MS_IN_SEC = 1000;
 const MS_IN_MIN = 60 * MS_IN_SEC;
 
-export default function CheckIn() {
+export default function SuspensefulCheckIn() {
+  return (
+    <Suspense>
+      <CheckIn />
+    </Suspense>
+  );
+}
+
+function CheckIn() {
   const { user } = useAuth();
   const hasCheckedIn = useRef(false);
   const searchParams = useSearchParams();

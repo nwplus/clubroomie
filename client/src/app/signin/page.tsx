@@ -2,10 +2,18 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import SignInButton from "@/app/components/SignInButton";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { auth } from "@/app/lib/firebase";
 
-export default function SignInPage() {
+export default function SuspensefulSignIn() {
+  return (
+    <Suspense>
+      <SignIn />
+    </Suspense>
+  );
+}
+
+function SignIn() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect") || "/";

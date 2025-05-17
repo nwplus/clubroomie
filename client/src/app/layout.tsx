@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import UserNav from "./components/UserNav";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <UserNav />
-          {children}
+          <Suspense fallback={<h1>Loading...</h1>}>{children}</Suspense>
         </AuthProvider>
       </body>
     </html>
