@@ -1,0 +1,9 @@
+services:
+  clubroomie_backend:
+    image: lsha0730/clubroomie_backend
+    build: .
+    ports:
+      - 4000:4000
+    volumes:
+      - ./serviceAccount.json:/app/serviceAccount.json:ro
+      - ./.env:/app/.env:ro

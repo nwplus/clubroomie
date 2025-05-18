@@ -1,8 +1,8 @@
 import { initializeApp, cert, ServiceAccount } from "firebase-admin/app";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
-import serviceAccount from "../serviceAccount.json";
 import { Occupant } from "./types";
 import { leaveClubroom } from "./occupants";
+import serviceAccount from "../serviceAccount.json";
 
 initializeApp({
   credential: cert(serviceAccount as ServiceAccount),
