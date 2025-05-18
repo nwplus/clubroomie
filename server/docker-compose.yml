@@ -3,7 +3,7 @@ services:
     image: nwplus/clubroomie-api
     build: .
     ports:
-      - 4303:4000 # host:container
+      - 4303:4303 # host:container
     volumes:
       - ./serviceAccount.json:/app/serviceAccount.json:ro
       - ./.env:/app/.env:ro
