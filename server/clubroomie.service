@@ -1,0 +1,13 @@
+[Unit]
+Description=A clubroom monitor for attendance announcements!
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/docker compose up
+Restart=always
+User=ubuntu
+WorkingDirectory=/home/ubuntu/clubroomie/server
+
+[Install]
+WantedBy=multi-user.target
