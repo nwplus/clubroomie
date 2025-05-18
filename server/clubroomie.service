@@ -7,7 +7,8 @@ Type=simple
 ExecStart=/usr/bin/docker compose up
 Restart=always
 User=ubuntu
-WorkingDirectory=/home/ubuntu/clubroomie/server
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/actions-runner/_work/clubroomie/clubroomie
 
 [Install]
 WantedBy=multi-user.target
