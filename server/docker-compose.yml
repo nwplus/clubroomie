@@ -1,9 +1,9 @@
 services:
   clubroomie_backend:
-    image: lsha0730/clubroomie_backend
+    image: nwplus/clubroomie-api
     build: .
     ports:
-      - 4000:4000
+      - 4303:4000 # host:container
     volumes:
       - ./serviceAccount.json:/app/serviceAccount.json:ro
       - ./.env:/app/.env:ro
