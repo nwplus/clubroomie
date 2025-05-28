@@ -1,3 +1,4 @@
+# For custom deployment
 [Unit]
 Description=A clubroom monitor for attendance announcements!
 After=network.target
