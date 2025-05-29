@@ -31,7 +31,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-6">
-      <h1 className="text-3xl font-bold">Welcome to the nwClubroom 👋</h1>
+      <h1>It worked!</h1>
+      {/* <h1 className="text-3xl font-bold">Welcome to the nwClubroom 👋</h1>
 
       {!user ? (
         <>
@@ -56,7 +57,7 @@ export default function HomePage() {
             Check Out
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
