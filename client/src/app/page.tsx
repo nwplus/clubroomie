@@ -3,11 +3,11 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { auth } from "@/app/lib/firebase";
-import SignInButton from "@/app/components/SignInButton";
-import { User } from "firebase/auth";
+// import SignInButton from "@/app/components/SignInButton";
+// import { User } from "firebase/auth";
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
   const [userChecked, setUserChecked] = useState(false);
 
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
+      // setUser(currentUser);
       setUserChecked(true);
 
       if (currentUser && redirectPath !== "/") {
