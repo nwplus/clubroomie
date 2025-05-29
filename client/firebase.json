@@ -2,7 +2,6 @@
   "hosting": [
     {
       "target": "clubroomie",
-      "site": "clubroomie",
       "source": ".",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "frameworksBackend": {
@@ -11,7 +10,6 @@
     },
     {
       "target": "clubroomie-dev",
-      "site": "clubroomie-dev",
       "source": ".",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "frameworksBackend": {

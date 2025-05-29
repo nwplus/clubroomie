@@ -1,5 +1,17 @@
 {
   "projects": {
-    "default": "nwplus-ubc"
+    "default": "nwplus-ubc-dev"
+  },
+  "targets": {
+    "nwplus-ubc": {
+      "hosting": {
+        "clubroomie": ["clubroomie"]
+      }
+    },
+    "nwplus-ubc-dev": {
+      "hosting": {
+        "clubroomie-dev": ["clubroomie-dev"]
+      }
+    }
   }
 }
