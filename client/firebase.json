@@ -1,10 +1,22 @@
 {
-  "hosting": {
-    "site": "clubroomie-dev",
-    "source": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "frameworksBackend": {
-      "region": "us-central1"
+  "hosting": [
+    {
+      "target": "clubroomie",
+      "site": "clubroomie",
+      "source": ".",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "frameworksBackend": {
+        "region": "us-central1"
+      }
+    },
+    {
+      "target": "clubroomie-dev",
+      "site": "clubroomie-dev",
+      "source": ".",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "frameworksBackend": {
+        "region": "us-central1"
+      }
     }
-  }
+  ]
 }
