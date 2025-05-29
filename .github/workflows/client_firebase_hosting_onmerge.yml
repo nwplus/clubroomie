@@ -42,8 +42,8 @@ jobs:
 
       - name: Deploy to dev firebase project
         if: ${{ env.IS_PRODUCTION == 'false' }}
-        run: firebase deploy --only hosting:clubroomie-dev --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting:clubroomie-dev --project nwplus-ubc-dev --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Deploy to prod firebase project
         if: ${{ env.IS_PRODUCTION == 'true' }}
-        run: firebase deploy --only hosting:clubroomie --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting:clubroomie --project nwplus-ubc --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
