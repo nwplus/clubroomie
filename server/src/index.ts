@@ -49,5 +49,9 @@ app.get("/occupants", async (req, res) => {
   res.json(occupants);
 });
 
+app.get("/healthcheck", async (req, res) => {
+  res.status(200).send("Clubroomie API is running!");
+});
+
 app.listen(process.env.PORT);
 console.log(`Server listening on port ${process.env.PORT}`);
