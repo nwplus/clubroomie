@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IS_PRODUCTION: ${{ endsWith(github.ref, 'main') }}
+    defaults:
+      run:
+        working-directory: ./client
     steps:
       - uses: actions/checkout@master
 
@@ -23,16 +26,13 @@ jobs:
 
       - name: Load .env.production
         if: ${{ env.IS_PRODUCTION == 'true' }}
-        working-directory: ./client
         run: cp .env.production .env
 
       - name: Load .env.development
         if: ${{ env.IS_PRODUCTION == 'false' }}
-        working-directory: ./client
         run: cp .env.development .env
 
       - name: Build project
-        working-directory: ./client
         run: yarn build
 
       - name: Deploy to dev firebase project
