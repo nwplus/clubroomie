@@ -1,13 +1,9 @@
 import axios from "axios";
 import { Occupant } from "./types";
-import { getOccupants } from "./firebase";
+import { getOccupants, getLastMessage, setLastMessage, LastMessageData } from "./firebase";
 
 export type Action = "checkin" | "checkout" | "change";
 
-// Cache last message metadata
-let lastMessageTs: string | null = null;
-let lastMessageChannel: string | null = null;
-let lastMessageAction: { action: Action; person: Occupant } | null = null;
 let announceMutex: Promise<void> = Promise.resolve();
 
 /**
@@ -45,7 +41,6 @@ async function sendMessage(message: string): Promise<{ ts?: string; channel?: st
  */
 async function updateMessage(channel: string, ts: string, text: string) {
   if (!process.env.SLACK_BOT_TOKEN) {
-    console.warn("SLACK_BOT_TOKEN not available, cannot update messages");
     return;
   }
 
@@ -102,9 +97,14 @@ function formatExpiration(iso: string) {
 export async function announceChange(action: Action, person: Occupant) {
   announceMutex = announceMutex.then(async () => {
     try {
-      if (lastMessageTs && lastMessageChannel && lastMessageAction) {
-        const condensedText = getCondensedMessage(lastMessageAction.action, lastMessageAction.person);
-        await updateMessage(lastMessageChannel, lastMessageTs, condensedText);
+      const lastMessage = await getLastMessage();
+      
+      if (lastMessage) {
+        const condensedText = getCondensedMessage(
+          lastMessage.action.action as Action, 
+          { id: lastMessage.occupant.id, expiration: lastMessage.occupant.expiration }
+        );
+        await updateMessage(lastMessage.channel, lastMessage.timestamp, condensedText);
       }
 
       const messages: Record<Action, string> = {
@@ -130,9 +130,16 @@ export async function announceChange(action: Action, person: Occupant) {
 
       const message = `${emojis[action]} *${person.id} has ${messages[action]}*\n\n${formattedOccupants}`;
       const result = await sendMessage(message);
-      lastMessageTs = result.ts || null;
-      lastMessageChannel = result.channel || process.env.SLACK_CHANNEL_ID || null;
-      lastMessageAction = { action, person };
+      
+      if (result.ts && person.id) {
+        const messageData: LastMessageData = {
+          action: { action },
+          occupant: { id: person.id, expiration: person.expiration ?? "" },
+          channel: result.channel ?? process.env.SLACK_CHANNEL_ID ?? "",
+          timestamp: result.ts,
+        };
+        await setLastMessage(messageData);
+      }
 
     } catch (error) {
       console.error("Failed to announce change:", error);
