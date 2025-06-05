@@ -29,13 +29,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Load .env.production
-        if: ${{ env.IS_PRODUCTION == 'true' }}
-        run: cp .env.production .env
-
-      - name: Load .env.development
+      - name: Load .env.development as production environment
         if: ${{ env.IS_PRODUCTION == 'false' }}
-        run: cp .env.development .env
+        run: cp .env.development .env.production
 
       - name: Build project
         run: yarn build
