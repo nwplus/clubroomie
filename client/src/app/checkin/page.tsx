@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { Suspense, useEffect } from "react";
+import { Suspense, useCallback, useEffect } from "react";
 import RequireAuth from "../components/RequireAuth";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "next/navigation";
@@ -37,7 +37,7 @@ function CheckIn() {
     sessionStorage.setItem(INFO_KEY, JSON.stringify(info));
   }
 
-  function checkIn() {
+  const checkIn = useCallback(() => {
     if (!user) return;
 
     const duration = searchParams.get("duration") ?? DEFAULT_DURATION_MINS;
@@ -52,7 +52,7 @@ function CheckIn() {
     });
 
     return expirationISO;
-  }
+  }, [user, searchParams]);
 
   useEffect(() => {
     if (!user) return;
@@ -60,7 +60,7 @@ function CheckIn() {
     const expirationISO = checkIn() as string;
     setInfo(expirationISO);
     router.push("/stale");
-  }, [user, searchParams]);
+  }, [user, searchParams, checkIn, router]);
 
   return (
     <RequireAuth>
