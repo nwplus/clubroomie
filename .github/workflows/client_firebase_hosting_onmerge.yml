@@ -29,11 +29,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Load .env.development as production environment
+      - name: Copy dev env to .env
         if: ${{ env.IS_PRODUCTION == 'false' }}
-        run: cp .env.development .env.production
+        run: cp .env.development .env
 
-      - name: Build project
+      - name: Build project (dev)
+        if: ${{ env.IS_PRODUCTION == 'false' }}
+        run: NODE_ENV=development yarn build
+
+      - name: Build project (prod)
+        if: ${{ env.IS_PRODUCTION == 'true' }}
         run: yarn build
 
       - name: Deploy to dev firebase project
