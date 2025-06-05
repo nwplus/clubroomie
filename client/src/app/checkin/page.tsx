@@ -6,7 +6,7 @@ import RequireAuth from "../components/RequireAuth";
 import { useAuth } from "../context/AuthContext";
 import { useSearchParams } from "next/navigation";
 import { formatExpiration } from "../lib/time";
-import { Info, INFO_KEY } from "../stale/page";
+import { Info, INFO_KEY } from "../stale/constants";
 import { useRouter } from "next/navigation";
 
 const MS_IN_SEC = 1000;

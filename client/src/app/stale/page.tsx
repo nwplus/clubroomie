@@ -3,26 +3,19 @@
 import { TbInfoHexagonFilled, TbLogin, TbLogout } from "react-icons/tb";
 import RequireAuth from "../components/RequireAuth";
 import { ReactNode, useEffect, useState } from "react";
-
-export type Info = {
-  action: "checkin" | "checkout" | "info";
-  header: string;
-  message?: string;
-};
-
-export const INFO_KEY = "info";
-
-const DEFAULT_INFO: string = JSON.stringify({
-  action: "info",
-  header: "Stale Tab",
-  message: "Tap again or use a new tab!",
-});
+import { Info, INFO_KEY } from "./constants";
 
 const ICONS: Record<Info["action"], ReactNode> = {
   checkin: <TbLogin className="w-24 h-24 text-green-600" />,
   checkout: <TbLogout className="w-24 h-24 text-red-500" />,
   info: <TbInfoHexagonFilled className="w-18 h-18 text-stone-500" />,
 };
+
+const DEFAULT_INFO: string = JSON.stringify({
+  action: "info",
+  header: "Stale Tab",
+  message: "Tap again or use a new tab!",
+});
 
 export default function Stale() {
   const [info, setInfo] = useState<Info>(JSON.parse(DEFAULT_INFO));

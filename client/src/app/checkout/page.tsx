@@ -4,7 +4,7 @@ import axios from "axios";
 import { useCallback, useEffect } from "react";
 import RequireAuth from "../components/RequireAuth";
 import { useAuth } from "../context/AuthContext";
-import { Info, INFO_KEY } from "../stale/page";
+import { Info, INFO_KEY } from "../stale/constants";
 import { useRouter } from "next/navigation";
 
 export default function CheckOut() {
